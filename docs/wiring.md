@@ -48,10 +48,10 @@ E1.31 data is output-major. The first configured pixels drive output 0, the next
 For the default boot configuration:
 
 ```text
-Output 0: pixels 0-49
-Output 1: pixels 50-99
+Output 0: pixels 0-112
+Output 1: pixels 113-225
 ...
-Output 29: pixels 1450-1499
+Output 29: pixels 3277-3389
 ```
 
 If runtime configuration changes the active output count or strand length, the mapping remains output-major within the active outputs.

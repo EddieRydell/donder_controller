@@ -6,6 +6,7 @@ NA/
 .idea/
 third_party/
 
+.venv/
 **__pycache**
 
 # Vivado/Vitis logs, journals, and backups

@@ -148,7 +148,7 @@ static void default_lengths(uint32_t lengths[DAWN_OUTPUT_COUNT])
     }
 }
 
-static int test_default_config_commits_30_by_50(void)
+static int test_default_config_commits_default_shape(void)
 {
     if (reset_state() != 0) return 1;
     EXPECT_EQ(DAWN_OUTPUT_COUNT, DAWN_DEFAULT_ACTIVE_OUTPUT_COUNT);
@@ -268,7 +268,7 @@ typedef struct {
 int main(void)
 {
     const test_case_t tests[] = {
-        {"default_config_commits_30_by_50", test_default_config_commits_30_by_50},
+        {"default_config_commits_default_shape", test_default_config_commits_default_shape},
         {"sparse_linear_mapping", test_sparse_linear_mapping},
         {"writes_only_current_staging_frame", test_writes_only_current_staging_frame},
         {"shrink_commits_black_frame_before_reconfiguring", test_shrink_commits_black_frame_before_reconfiguring},

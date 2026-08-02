@@ -22,7 +22,7 @@ Default generated configuration:
 | E1.31 UDP port | `5568` |
 | First universe | `1` |
 | Active outputs at boot | `30` |
-| Pixels per output at boot | `50` |
+| Pixels per output at boot | `113` |
 | Max pixels per output | `1024` |
 | UART baud | `115200` |
 
@@ -110,7 +110,7 @@ output 1 pixel 1 RGB
 ...
 ```
 
-The frame word format inside PL frame RAM is `0x00RRGGBB`. E1.31 packets use 510 RGB data slots per universe, so a 30-output by 50-pixel frame uses 1500 pixels, 4500 RGB slots, and 9 universes.
+The frame word format inside PL frame RAM is `0x00RRGGBB`. E1.31 packets use 510 RGB data slots per universe, so a 30-output by 113-pixel frame uses 3390 pixels, 10170 RGB slots, and 20 universes.
 
 ## Performance
 

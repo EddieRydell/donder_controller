@@ -757,7 +757,7 @@ module pl_control_regs (
         end
         always_ff @(posedge clk) begin
             if(~rst_n) begin
-                field_storage.STRAND_PIXEL_COUNT[i0].value.value <= 32'h32;
+                field_storage.STRAND_PIXEL_COUNT[i0].value.value <= 32'h71;
             end else begin
                 if(field_combo.STRAND_PIXEL_COUNT[i0].value.load_next) begin
                     field_storage.STRAND_PIXEL_COUNT[i0].value.value <= field_combo.STRAND_PIXEL_COUNT[i0].value.next;

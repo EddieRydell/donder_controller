@@ -11,7 +11,7 @@ package pl_control_regs_pkg;
     localparam P_PIN_OUTPUT_COUNT = 'h1e;
     localparam P_PIXELS_PER_OUTPUT = 'h400;
     localparam P_DEFAULT_ACTIVE_OUTPUT_COUNT = 'h1e;
-    localparam P_DEFAULT_STRAND_PIXEL_COUNT = 'h32;
+    localparam P_DEFAULT_STRAND_PIXEL_COUNT = 'h71;
     localparam P_DEFAULT_OUTPUT_INVERT_MASK = 'h3fffffff;
     localparam P_WS281X_BIT_RATE = 'hc3500;
     localparam P_FRAME_BANKS = 'h2;

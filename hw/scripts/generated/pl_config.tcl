@@ -3,7 +3,7 @@ set dawn_pl_output_count 30
 set dawn_pl_pin_output_count 30
 set dawn_pl_pixels_per_output 1024
 set dawn_pl_default_active_output_count 30
-set dawn_pl_default_strand_pixel_count 50
+set dawn_pl_default_strand_pixel_count 113
 set dawn_pl_default_output_invert_mask 1073741823
 set dawn_pl_ws281x_bit_rate 800000
 set dawn_pl_frame_banks 2

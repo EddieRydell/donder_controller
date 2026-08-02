@@ -90,7 +90,7 @@ Expected startup lines include:
 
 ```text
 dawn controller starting
-strand_config active_outputs=30 ... total_pixels=1500 ... expected_universes=9
+strand_config active_outputs=30 ... total_pixels=3390 ... expected_universes=20
 foundation ready source=e131
 e131_status link=...
 ```
@@ -139,7 +139,7 @@ Useful direct sender commands:
 ```sh
 python ps/tools/e131_send.py --pattern bars --packet-count 10 --rate 30
 python ps/tools/e131_send.py --pattern chase --duration 20 --rate 30
-python ps/tools/e131_send.py --outputs 30 --pixels-per-output 50 --pattern white --packet-count 1
+python ps/tools/e131_send.py --outputs 30 --pixels-per-output 113 --pattern white --packet-count 1
 ```
 
 The sender is transmit-only. Use UART telemetry as the source of truth.
@@ -173,12 +173,12 @@ The controller consumes a linear output-major RGB stream:
 Output 0 pixels first, then output 1, then output 2, and so on.
 ```
 
-For the default `30` outputs by `50` pixels per output:
+For the default `30` outputs by `113` pixels per output:
 
 ```text
-Pixels:       1500
-RGB channels: 4500
-Universes:    9
+Pixels:       3390
+RGB channels: 10170
+Universes:    20
 ```
 
 For maximum `30` outputs by `1024` pixels per output:

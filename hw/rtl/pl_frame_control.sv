@@ -2,10 +2,10 @@
 
 module pl_frame_control #(
     parameter AXIL_ADDR_WIDTH = 12,
-    parameter FRAME_WORDS = dawn_pl_contract_pkg::FRAME_WORDS,
-    parameter OUTPUT_COUNT = dawn_pl_contract_pkg::OUTPUT_COUNT,
-    parameter PIXELS_PER_OUTPUT = dawn_pl_contract_pkg::PIXELS_PER_OUTPUT,
-    parameter MASK_WORD_COUNT = dawn_pl_contract_pkg::MASK_WORD_COUNT
+    parameter FRAME_WORDS = donder_pl_contract_pkg::FRAME_WORDS,
+    parameter OUTPUT_COUNT = donder_pl_contract_pkg::OUTPUT_COUNT,
+    parameter PIXELS_PER_OUTPUT = donder_pl_contract_pkg::PIXELS_PER_OUTPUT,
+    parameter MASK_WORD_COUNT = donder_pl_contract_pkg::MASK_WORD_COUNT
 ) (
     (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 aclk CLK", X_INTERFACE_PARAMETER = "ASSOCIATED_BUSIF S_AXI, ASSOCIATED_RESET aresetn" *)
     input  wire                       aclk,
@@ -76,11 +76,11 @@ module pl_frame_control #(
 
     import pl_control_regs_pkg::*;
 
-    localparam [31:0] STATUS_READY = dawn_pl_contract_pkg::REG_STATUS_ready_MASK;
-    localparam [31:0] STATUS_OVERFLOW = dawn_pl_contract_pkg::REG_STATUS_overflow_MASK;
-    localparam [31:0] STATUS_CONSUMER_ERROR = dawn_pl_contract_pkg::REG_STATUS_consumer_error_MASK;
-    localparam [31:0] STATUS_COMMIT_REJECTED = dawn_pl_contract_pkg::REG_STATUS_commit_rejected_MASK;
-    localparam [31:0] FRAME_WORDS_PER_BANK = dawn_pl_contract_pkg::FRAME_WORDS_PER_BANK;
+    localparam [31:0] STATUS_READY = donder_pl_contract_pkg::REG_STATUS_ready_MASK;
+    localparam [31:0] STATUS_OVERFLOW = donder_pl_contract_pkg::REG_STATUS_overflow_MASK;
+    localparam [31:0] STATUS_CONSUMER_ERROR = donder_pl_contract_pkg::REG_STATUS_consumer_error_MASK;
+    localparam [31:0] STATUS_COMMIT_REJECTED = donder_pl_contract_pkg::REG_STATUS_commit_rejected_MASK;
+    localparam [31:0] FRAME_WORDS_PER_BANK = donder_pl_contract_pkg::FRAME_WORDS_PER_BANK;
     localparam [31:0] NO_BUSY_BANK = 32'hffff_ffff;
     localparam integer ACTIVE_OUTPUT_WIDTH = $clog2(OUTPUT_COUNT + 1);
     localparam integer PIXEL_COUNT_WIDTH = $clog2(PIXELS_PER_OUTPUT + 1);
@@ -242,11 +242,11 @@ module pl_frame_control #(
             frame_drop_notify_swmod_q <= 1'b0;
             active_output_count_swmod_q <= 1'b0;
             consumer_reset_pulse <= 1'b0;
-            runtime_active_output_count <= ACTIVE_OUTPUT_WIDTH'(dawn_pl_contract_pkg::DEFAULT_ACTIVE_OUTPUT_COUNT);
-            runtime_output_invert_mask <= dawn_pl_contract_pkg::DEFAULT_OUTPUT_INVERT_MASK[OUTPUT_COUNT-1:0];
+            runtime_active_output_count <= ACTIVE_OUTPUT_WIDTH'(donder_pl_contract_pkg::DEFAULT_ACTIVE_OUTPUT_COUNT);
+            runtime_output_invert_mask <= donder_pl_contract_pkg::DEFAULT_OUTPUT_INVERT_MASK[OUTPUT_COUNT-1:0];
             for (output_index_ff = 0; output_index_ff < OUTPUT_COUNT; output_index_ff = output_index_ff + 1) begin
                 strand_pixel_count_swmod_q[output_index_ff] <= 1'b0;
-                runtime_strand_pixel_count[output_index_ff*PIXEL_COUNT_WIDTH +: PIXEL_COUNT_WIDTH] <= PIXEL_COUNT_WIDTH'(dawn_pl_contract_pkg::DEFAULT_STRAND_PIXEL_COUNT);
+                runtime_strand_pixel_count[output_index_ff*PIXEL_COUNT_WIDTH +: PIXEL_COUNT_WIDTH] <= PIXEL_COUNT_WIDTH'(donder_pl_contract_pkg::DEFAULT_STRAND_PIXEL_COUNT);
             end
         end else begin
             counter_reg <= counter_reg + 32'd1;

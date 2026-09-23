@@ -1,4 +1,4 @@
-create_bd_design "dawn_system"
+create_bd_design "donder_system"
 
 source [file join [file dirname [file normalize [info script]]] generated pl_config.tcl]
 
@@ -22,24 +22,24 @@ connect_bd_net [get_bd_pins processing_system7_0/FCLK_RESET0_N] [get_bd_pins pro
 
 create_bd_cell -type module -reference ws281x_controller_core ws281x_controller_core_0
 set_property -dict [list \
-  CONFIG.FRAME_WORDS $dawn_pl_frame_words \
-  CONFIG.FRAME_ADDR_WIDTH $dawn_pl_frame_addr_width \
-  CONFIG.OUTPUT_COUNT $dawn_pl_output_count \
-  CONFIG.PIXELS_PER_OUTPUT $dawn_pl_pixels_per_output \
-  CONFIG.WS281X_BIT_RATE $dawn_pl_ws281x_bit_rate \
+  CONFIG.FRAME_WORDS $donder_pl_frame_words \
+  CONFIG.FRAME_ADDR_WIDTH $donder_pl_frame_addr_width \
+  CONFIG.OUTPUT_COUNT $donder_pl_output_count \
+  CONFIG.PIXELS_PER_OUTPUT $donder_pl_pixels_per_output \
+  CONFIG.WS281X_BIT_RATE $donder_pl_ws281x_bit_rate \
 ] [get_bd_cells ws281x_controller_core_0]
 connect_bd_net [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins ws281x_controller_core_0/aclk]
 connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins ws281x_controller_core_0/aresetn]
 
 create_bd_cell -type module -reference axil_frame_ram axil_frame_ram_0
-set_property -dict [list CONFIG.AXIL_ADDR_WIDTH $dawn_pl_frame_addr_width CONFIG.FRAME_WORDS $dawn_pl_frame_words] [get_bd_cells axil_frame_ram_0]
+set_property -dict [list CONFIG.AXIL_ADDR_WIDTH $donder_pl_frame_addr_width CONFIG.FRAME_WORDS $donder_pl_frame_words] [get_bd_cells axil_frame_ram_0]
 connect_bd_net [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins axil_frame_ram_0/aclk]
 connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axil_frame_ram_0/aresetn]
 
 create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice ws281x_pin_slice_0
-set_property -dict [list CONFIG.DIN_WIDTH $dawn_pl_output_count CONFIG.DIN_FROM [expr {$dawn_pl_pin_output_count - 1}] CONFIG.DIN_TO 0 CONFIG.DOUT_WIDTH $dawn_pl_pin_output_count] [get_bd_cells ws281x_pin_slice_0]
+set_property -dict [list CONFIG.DIN_WIDTH $donder_pl_output_count CONFIG.DIN_FROM [expr {$donder_pl_pin_output_count - 1}] CONFIG.DIN_TO 0 CONFIG.DOUT_WIDTH $donder_pl_pin_output_count] [get_bd_cells ws281x_pin_slice_0]
 
-create_bd_port -dir O -from [expr {$dawn_pl_pin_output_count - 1}] -to 0 ws281x_data
+create_bd_port -dir O -from [expr {$donder_pl_pin_output_count - 1}] -to 0 ws281x_data
 connect_bd_net [get_bd_pins ws281x_controller_core_0/ws281x_data] [get_bd_pins ws281x_pin_slice_0/Din]
 connect_bd_net [get_bd_pins ws281x_pin_slice_0/Dout] [get_bd_ports ws281x_data]
 
@@ -65,15 +65,15 @@ set control_addr_seg [get_bd_addr_segs -quiet {processing_system7_0/Data/*ws281x
 if {[llength $control_addr_seg] == 0} {
   error "Could not find assigned address segment for ws281x_controller_core_0"
 }
-set_property range $dawn_pl_control_range_bytes $control_addr_seg
-set_property offset $dawn_pl_control_baseaddr $control_addr_seg
+set_property range $donder_pl_control_range_bytes $control_addr_seg
+set_property offset $donder_pl_control_baseaddr $control_addr_seg
 
 set frame_addr_seg [get_bd_addr_segs -quiet {processing_system7_0/Data/*axil_frame_ram_0*}]
 if {[llength $frame_addr_seg] == 0} {
   error "Could not find assigned address segment for axil_frame_ram_0"
 }
-set_property range $dawn_pl_frame_range_bytes $frame_addr_seg
-set_property offset $dawn_pl_frame_ram_baseaddr $frame_addr_seg
+set_property range $donder_pl_frame_range_bytes $frame_addr_seg
+set_property offset $donder_pl_frame_ram_baseaddr $frame_addr_seg
 
 validate_bd_design
 save_bd_design

@@ -7,9 +7,9 @@
 #include "../app/e131_receiver.h"
 #include "../app/frame_pipeline.h"
 
-#define MAX_PACKET DAWN_PL_E131_MAX_PACKET_BYTES
-#define HOST_ACTIVE_PIXELS (DAWN_DEFAULT_ACTIVE_OUTPUT_COUNT * DAWN_DEFAULT_STRAND_PIXEL_COUNT)
-#define HOST_UNIVERSE_COUNT ((HOST_ACTIVE_PIXELS * 3u + DAWN_SLOTS_PER_UNIVERSE - 1u) / DAWN_SLOTS_PER_UNIVERSE)
+#define MAX_PACKET DONDER_PL_E131_MAX_PACKET_BYTES
+#define HOST_ACTIVE_PIXELS (DONDER_DEFAULT_ACTIVE_OUTPUT_COUNT * DONDER_DEFAULT_STRAND_PIXEL_COUNT)
+#define HOST_UNIVERSE_COUNT ((HOST_ACTIVE_PIXELS * 3u + DONDER_SLOTS_PER_UNIVERSE - 1u) / DONDER_SLOTS_PER_UNIVERSE)
 #define HOST_LAST_UNIVERSE_OFFSET (HOST_UNIVERSE_COUNT - 1u)
 #define EXPECT_TRUE(expr) do { if (!(expr)) return fail(__LINE__, #expr); } while (0)
 #define EXPECT_EQ(a, b) do { uint32_t av = (uint32_t)(a); uint32_t bv = (uint32_t)(b); if (av != bv) return fail_eq(__LINE__, #a, av, #b, bv); } while (0)
@@ -18,7 +18,7 @@ static uint32_t g_commit_count;
 static uint32_t g_write_count;
 static uint32_t g_clear_count;
 static int g_commit_result;
-static uint32_t g_words[DAWN_WORDS_PER_FRAME];
+static uint32_t g_words[DONDER_WORDS_PER_FRAME];
 
 uint32_t *frame_pipeline_inactive_words(void)
 {
@@ -32,18 +32,18 @@ uint32_t frame_pipeline_active_pixel_count(void)
 
 uint32_t frame_pipeline_active_output_count(void)
 {
-    return DAWN_DEFAULT_ACTIVE_OUTPUT_COUNT;
+    return DONDER_DEFAULT_ACTIVE_OUTPUT_COUNT;
 }
 
 uint32_t frame_pipeline_required_words(void)
 {
-    return DAWN_WORDS_PER_FRAME;
+    return DONDER_WORDS_PER_FRAME;
 }
 
 uint32_t frame_pipeline_strand_pixel_count(uint32_t output)
 {
     (void)output;
-    return DAWN_DEFAULT_STRAND_PIXEL_COUNT;
+    return DONDER_DEFAULT_STRAND_PIXEL_COUNT;
 }
 
 int frame_pipeline_init(void)
@@ -54,7 +54,7 @@ int frame_pipeline_init(void)
 void frame_pipeline_clear_all(uint32_t rgb_word)
 {
     g_clear_count++;
-    for (uint32_t i = 0u; i < DAWN_WORDS_PER_FRAME; ++i) {
+    for (uint32_t i = 0u; i < DONDER_WORDS_PER_FRAME; ++i) {
         g_words[i] = rgb_word & 0x00ffffffu;
     }
 }
@@ -77,7 +77,7 @@ int frame_pipeline_commit(void)
     return 0;
 }
 
-int frame_pipeline_configure(uint32_t active_count, const uint32_t lengths[DAWN_OUTPUT_COUNT])
+int frame_pipeline_configure(uint32_t active_count, const uint32_t lengths[DONDER_OUTPUT_COUNT])
 {
     (void)active_count;
     (void)lengths;
@@ -184,9 +184,9 @@ static uint16_t build_sync(uint8_t *packet, uint8_t sequence, const uint8_t cid[
 
 static uint16_t slots_for_offset(uint32_t offset)
 {
-    uint32_t first_slot = offset * DAWN_SLOTS_PER_UNIVERSE;
+    uint32_t first_slot = offset * DONDER_SLOTS_PER_UNIVERSE;
     uint32_t remaining = (HOST_ACTIVE_PIXELS * 3u) - first_slot;
-    return (uint16_t)(remaining > DAWN_SLOTS_PER_UNIVERSE ? DAWN_SLOTS_PER_UNIVERSE : remaining);
+    return (uint16_t)(remaining > DONDER_SLOTS_PER_UNIVERSE ? DONDER_SLOTS_PER_UNIVERSE : remaining);
 }
 
 static void send_universe(uint32_t offset, uint8_t sequence, const uint8_t cid[16], uint8_t priority, uint16_t sync_address, uint8_t options, uint32_t now_ms)
@@ -194,7 +194,7 @@ static void send_universe(uint32_t offset, uint8_t sequence, const uint8_t cid[1
     uint8_t packet[MAX_PACKET];
     uint8_t ip[4] = {192u, 168u, 7u, 1u};
     uint16_t length = build_data(packet,
-                                 (uint16_t)(DAWN_FIRST_UNIVERSE + offset),
+                                 (uint16_t)(DONDER_FIRST_UNIVERSE + offset),
                                  sequence,
                                  cid,
                                  priority,
@@ -209,25 +209,25 @@ static int test_parser_rejects(void)
     uint8_t packet[MAX_PACKET];
     uint8_t cid[16] = {1u};
     e131_data_packet_t parsed;
-    uint16_t len = build_data(packet, DAWN_FIRST_UNIVERSE, 7u, cid, 100u, 0u, 0u, DAWN_SLOTS_PER_UNIVERSE);
+    uint16_t len = build_data(packet, DONDER_FIRST_UNIVERSE, 7u, cid, 100u, 0u, 0u, DONDER_SLOTS_PER_UNIVERSE);
 
-    EXPECT_EQ(e131_parse_data_packet(packet, 10u, DAWN_FIRST_UNIVERSE, DAWN_WORDS_PER_FRAME, &parsed), E131_PARSE_SHORT);
+    EXPECT_EQ(e131_parse_data_packet(packet, 10u, DONDER_FIRST_UNIVERSE, DONDER_WORDS_PER_FRAME, &parsed), E131_PARSE_SHORT);
     packet[4] = 0u;
-    EXPECT_EQ(e131_parse_data_packet(packet, len, DAWN_FIRST_UNIVERSE, DAWN_WORDS_PER_FRAME, &parsed), E131_PARSE_ACN_ID);
-    len = build_data(packet, DAWN_FIRST_UNIVERSE, 7u, cid, 100u, 0u, 0u, DAWN_SLOTS_PER_UNIVERSE);
+    EXPECT_EQ(e131_parse_data_packet(packet, len, DONDER_FIRST_UNIVERSE, DONDER_WORDS_PER_FRAME, &parsed), E131_PARSE_ACN_ID);
+    len = build_data(packet, DONDER_FIRST_UNIVERSE, 7u, cid, 100u, 0u, 0u, DONDER_SLOTS_PER_UNIVERSE);
     put32(&packet[18], 0u);
-    EXPECT_EQ(e131_parse_data_packet(packet, len, DAWN_FIRST_UNIVERSE, DAWN_WORDS_PER_FRAME, &parsed), E131_PARSE_ROOT_VECTOR);
-    len = build_data(packet, DAWN_FIRST_UNIVERSE, 7u, cid, 100u, 0u, 0u, DAWN_SLOTS_PER_UNIVERSE);
+    EXPECT_EQ(e131_parse_data_packet(packet, len, DONDER_FIRST_UNIVERSE, DONDER_WORDS_PER_FRAME, &parsed), E131_PARSE_ROOT_VECTOR);
+    len = build_data(packet, DONDER_FIRST_UNIVERSE, 7u, cid, 100u, 0u, 0u, DONDER_SLOTS_PER_UNIVERSE);
     put32(&packet[40], 0u);
-    EXPECT_EQ(e131_parse_data_packet(packet, len, DAWN_FIRST_UNIVERSE, DAWN_WORDS_PER_FRAME, &parsed), E131_PARSE_FRAME_VECTOR);
-    len = build_data(packet, DAWN_FIRST_UNIVERSE, 7u, cid, 100u, 0u, 0u, DAWN_SLOTS_PER_UNIVERSE);
+    EXPECT_EQ(e131_parse_data_packet(packet, len, DONDER_FIRST_UNIVERSE, DONDER_WORDS_PER_FRAME, &parsed), E131_PARSE_FRAME_VECTOR);
+    len = build_data(packet, DONDER_FIRST_UNIVERSE, 7u, cid, 100u, 0u, 0u, DONDER_SLOTS_PER_UNIVERSE);
     packet[117] = 0u;
-    EXPECT_EQ(e131_parse_data_packet(packet, len, DAWN_FIRST_UNIVERSE, DAWN_WORDS_PER_FRAME, &parsed), E131_PARSE_DMP_VECTOR);
-    len = build_data(packet, DAWN_FIRST_UNIVERSE, 7u, cid, 100u, 0u, 0u, DAWN_SLOTS_PER_UNIVERSE);
+    EXPECT_EQ(e131_parse_data_packet(packet, len, DONDER_FIRST_UNIVERSE, DONDER_WORDS_PER_FRAME, &parsed), E131_PARSE_DMP_VECTOR);
+    len = build_data(packet, DONDER_FIRST_UNIVERSE, 7u, cid, 100u, 0u, 0u, DONDER_SLOTS_PER_UNIVERSE);
     packet[125] = 1u;
-    EXPECT_EQ(e131_parse_data_packet(packet, len, DAWN_FIRST_UNIVERSE, DAWN_WORDS_PER_FRAME, &parsed), E131_PARSE_START_CODE);
-    len = build_data(packet, (uint16_t)(DAWN_FIRST_UNIVERSE - 1u), 7u, cid, 100u, 0u, 0u, DAWN_SLOTS_PER_UNIVERSE);
-    EXPECT_EQ(e131_parse_data_packet(packet, len, DAWN_FIRST_UNIVERSE, DAWN_WORDS_PER_FRAME, &parsed), E131_PARSE_UNIVERSE);
+    EXPECT_EQ(e131_parse_data_packet(packet, len, DONDER_FIRST_UNIVERSE, DONDER_WORDS_PER_FRAME, &parsed), E131_PARSE_START_CODE);
+    len = build_data(packet, (uint16_t)(DONDER_FIRST_UNIVERSE - 1u), 7u, cid, 100u, 0u, 0u, DONDER_SLOTS_PER_UNIVERSE);
+    EXPECT_EQ(e131_parse_data_packet(packet, len, DONDER_FIRST_UNIVERSE, DONDER_WORDS_PER_FRAME, &parsed), E131_PARSE_UNIVERSE);
     return 0;
 }
 
@@ -236,17 +236,17 @@ static int test_parser_metadata(void)
     uint8_t packet[MAX_PACKET];
     uint8_t cid[16] = {0xdeu, 0xadu, 0xbeu, 0xefu};
     e131_data_packet_t parsed;
-    uint16_t len = build_data(packet, 3u, 42u, cid, 150u, DAWN_E131_DEFAULT_SYNC_ADDRESS, 0x80u, DAWN_SLOTS_PER_UNIVERSE);
+    uint16_t len = build_data(packet, 3u, 42u, cid, 150u, DONDER_E131_DEFAULT_SYNC_ADDRESS, 0x80u, DONDER_SLOTS_PER_UNIVERSE);
 
-    EXPECT_EQ(e131_parse_data_packet(packet, len, DAWN_FIRST_UNIVERSE, DAWN_WORDS_PER_FRAME, &parsed), E131_PARSE_OK);
+    EXPECT_EQ(e131_parse_data_packet(packet, len, DONDER_FIRST_UNIVERSE, DONDER_WORDS_PER_FRAME, &parsed), E131_PARSE_OK);
     EXPECT_TRUE(parsed.cid == &packet[22]);
     EXPECT_EQ(parsed.cid[0], 0xdeu);
     EXPECT_EQ(parsed.priority, 150u);
-    EXPECT_EQ(parsed.sync_address, DAWN_E131_DEFAULT_SYNC_ADDRESS);
+    EXPECT_EQ(parsed.sync_address, DONDER_E131_DEFAULT_SYNC_ADDRESS);
     EXPECT_EQ(parsed.sequence, 42u);
     EXPECT_EQ(parsed.options, 0x80u);
     EXPECT_EQ(parsed.universe, 3u);
-    EXPECT_EQ(parsed.rgb_slot_count, DAWN_SLOTS_PER_UNIVERSE);
+    EXPECT_EQ(parsed.rgb_slot_count, DONDER_SLOTS_PER_UNIVERSE);
     EXPECT_TRUE(parsed.rgb_slots == &packet[126]);
     return 0;
 }
@@ -273,7 +273,7 @@ static int test_exact_final_slot_count(void)
     uint16_t len;
 
     reset_receiver();
-    len = build_data(packet, (uint16_t)(DAWN_FIRST_UNIVERSE + HOST_UNIVERSE_COUNT), 1u, cid, 100u, 0u, 0u, DAWN_SLOTS_PER_UNIVERSE);
+    len = build_data(packet, (uint16_t)(DONDER_FIRST_UNIVERSE + HOST_UNIVERSE_COUNT), 1u, cid, 100u, 0u, 0u, DONDER_SLOTS_PER_UNIVERSE);
     e131_receiver_handle_packet(packet, len, ip, 0u);
     EXPECT_EQ(e131_receiver_status()->e131_rejected, 1u);
     EXPECT_EQ(g_write_count, 0u);
@@ -288,9 +288,9 @@ static int test_missing_universe_blackout(void)
     for (uint32_t offset = 0u; offset < HOST_LAST_UNIVERSE_OFFSET; ++offset) {
         send_universe(offset, (uint8_t)offset, cid, 100u, 0u, 0u, 0u);
     }
-    e131_receiver_poll(DAWN_E131_BLACKOUT_TIMEOUT_MS - 1u);
+    e131_receiver_poll(DONDER_E131_BLACKOUT_TIMEOUT_MS - 1u);
     EXPECT_EQ(e131_receiver_status()->blackouts, 0u);
-    e131_receiver_poll(DAWN_E131_BLACKOUT_TIMEOUT_MS);
+    e131_receiver_poll(DONDER_E131_BLACKOUT_TIMEOUT_MS);
     EXPECT_EQ(e131_receiver_status()->blackouts, 1u);
     EXPECT_EQ(e131_receiver_status()->incomplete_sweeps, 1u);
     EXPECT_EQ(e131_receiver_status()->source_locked, 0u);
@@ -306,11 +306,11 @@ static int test_synced_waits_for_sync(void)
 
     reset_receiver();
     for (uint32_t offset = 0u; offset < HOST_UNIVERSE_COUNT; ++offset) {
-        send_universe(offset, (uint8_t)offset, cid, 100u, DAWN_E131_DEFAULT_SYNC_ADDRESS, 0u, 0u);
+        send_universe(offset, (uint8_t)offset, cid, 100u, DONDER_E131_DEFAULT_SYNC_ADDRESS, 0u, 0u);
     }
     EXPECT_EQ(g_commit_count, 0u);
     EXPECT_EQ(e131_receiver_status()->sync_waits, 1u);
-    len = build_sync(packet, 1u, cid, DAWN_E131_DEFAULT_SYNC_ADDRESS);
+    len = build_sync(packet, 1u, cid, DONDER_E131_DEFAULT_SYNC_ADDRESS);
     e131_receiver_handle_packet(packet, len, ip, 10u);
     EXPECT_EQ(g_commit_count, 1u);
     EXPECT_EQ(e131_receiver_status()->complete_frames, 1u);
@@ -323,9 +323,9 @@ static int test_missing_sync_blackout(void)
 
     reset_receiver();
     for (uint32_t offset = 0u; offset < HOST_UNIVERSE_COUNT; ++offset) {
-        send_universe(offset, (uint8_t)offset, cid, 100u, DAWN_E131_DEFAULT_SYNC_ADDRESS, 0u, 0u);
+        send_universe(offset, (uint8_t)offset, cid, 100u, DONDER_E131_DEFAULT_SYNC_ADDRESS, 0u, 0u);
     }
-    e131_receiver_poll(DAWN_E131_BLACKOUT_TIMEOUT_MS);
+    e131_receiver_poll(DONDER_E131_BLACKOUT_TIMEOUT_MS);
     EXPECT_EQ(e131_receiver_status()->blackouts, 1u);
     EXPECT_EQ(e131_receiver_status()->sync_timeouts, 1u);
     return 0;

@@ -1,6 +1,6 @@
 # Developer Notes
 
-Dawn has one runtime path:
+Donder has one runtime path:
 
 ```text
 Zynq PS bare-metal app
@@ -65,7 +65,7 @@ The committed generated outputs include:
 - `ps/app/generated/pl_config.h`
 - `ps/tools/generated/pl_config.py`
 - `hw/scripts/generated/pl_config.tcl`
-- `hw/rtl/generated/dawn_pl_contract_pkg.sv`
+- `hw/rtl/generated/donder_pl_contract_pkg.sv`
 - `hw/rtl/generated/pl_control_regs_pkg.sv`
 - `hw/rtl/generated/pl_control_regs.sv`
 

@@ -96,7 +96,7 @@ e131_parse_result_t e131_parse_data_packet(const uint8_t *data,
     }
 
     prop_count = read_be16(&data[123]);
-    if (prop_count < 1u || prop_count > (DAWN_SLOTS_PER_UNIVERSE + 1u)
+    if (prop_count < 1u || prop_count > (DONDER_SLOTS_PER_UNIVERSE + 1u)
         || (uint32_t)E131_MIN_PACKET_BYTES + (uint32_t)prop_count - 1u > length) {
         return E131_PARSE_PROP_COUNT;
     }
@@ -109,7 +109,7 @@ e131_parse_result_t e131_parse_data_packet(const uint8_t *data,
         return E131_PARSE_UNIVERSE;
     }
     universe_offset = (uint32_t)(universe - first_universe);
-    first_slot = universe_offset * DAWN_SLOTS_PER_UNIVERSE;
+    first_slot = universe_offset * DONDER_SLOTS_PER_UNIVERSE;
     if (first_slot >= total_pixels * 3u) {
         return E131_PARSE_UNIVERSE;
     }

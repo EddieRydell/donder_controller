@@ -324,8 +324,8 @@ addrmap pl_control #(
     } OUTPUT_INVERT_MASK[(P_OUTPUT_COUNT + 31) / 32] @ 12'h104 += 4;
 };
 
-addrmap dawn_pl {
-    name = "Dawn PL system address map";
+addrmap donder_pl {
+    name = "Donder PL system address map";
     desc = "Absolute PS-visible placement for the PL control block and frame RAM aperture.";
 
     pl_control #(

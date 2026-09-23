@@ -8,7 +8,7 @@
 
 #define E131_OPTION_PREVIEW 0x80u
 #define E131_OPTION_STREAM_TERMINATED 0x40u
-#define MAX_E131_UNIVERSES ((DAWN_WORDS_PER_FRAME * 3u + DAWN_SLOTS_PER_UNIVERSE - 1u) / DAWN_SLOTS_PER_UNIVERSE)
+#define MAX_E131_UNIVERSES ((DONDER_WORDS_PER_FRAME * 3u + DONDER_SLOTS_PER_UNIVERSE - 1u) / DONDER_SLOTS_PER_UNIVERSE)
 #define BITMAP_WORDS ((MAX_E131_UNIVERSES + 31u) / 32u)
 
 static e131_receiver_status_t g_status;
@@ -32,15 +32,15 @@ static uint32_t total_slots(void)
 
 static uint32_t expected_universe_count(void)
 {
-    return (total_slots() + DAWN_SLOTS_PER_UNIVERSE - 1u) / DAWN_SLOTS_PER_UNIVERSE;
+    return (total_slots() + DONDER_SLOTS_PER_UNIVERSE - 1u) / DONDER_SLOTS_PER_UNIVERSE;
 }
 
 static uint16_t expected_slots_for_offset(uint32_t offset)
 {
-    uint32_t first_slot = offset * DAWN_SLOTS_PER_UNIVERSE;
+    uint32_t first_slot = offset * DONDER_SLOTS_PER_UNIVERSE;
     uint32_t remaining = total_slots() - first_slot;
 
-    return (uint16_t)(remaining > DAWN_SLOTS_PER_UNIVERSE ? DAWN_SLOTS_PER_UNIVERSE : remaining);
+    return (uint16_t)(remaining > DONDER_SLOTS_PER_UNIVERSE ? DONDER_SLOTS_PER_UNIVERSE : remaining);
 }
 
 static int cid_equal(const uint8_t *a, const uint8_t *b)
@@ -307,7 +307,7 @@ void e131_receiver_handle_packet(const uint8_t *data,
     }
     record_packet_timing(now_ms);
 
-    if ((packet.options & E131_OPTION_PREVIEW) != 0u && DAWN_E131_ACCEPT_PREVIEW == 0u) {
+    if ((packet.options & E131_OPTION_PREVIEW) != 0u && DONDER_E131_ACCEPT_PREVIEW == 0u) {
         g_status.e131_rejected++;
         g_status.preview_rejects++;
         g_status.last_error = "preview";
@@ -384,7 +384,7 @@ void e131_receiver_poll(uint32_t now_ms)
     if (!g_status.source_locked || !g_has_display_time) {
         return;
     }
-    if (elapsed_ms(now_ms, g_last_display_ms) < DAWN_E131_BLACKOUT_TIMEOUT_MS) {
+    if (elapsed_ms(now_ms, g_last_display_ms) < DONDER_E131_BLACKOUT_TIMEOUT_MS) {
         return;
     }
     if (g_status.sync_mode && g_pending_synced_complete) {

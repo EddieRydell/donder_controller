@@ -7,7 +7,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 VITIS_WORKSPACE = REPO_ROOT / "build" / "vitis"
-BITSTREAM = REPO_ROOT / "build" / "vivado" / "dawn_controller.runs" / "impl_1" / "dawn_system_wrapper.bit"
+BITSTREAM = REPO_ROOT / "build" / "vivado" / "donder_controller.runs" / "impl_1" / "donder_system_wrapper.bit"
 BOOT_DIR = REPO_ROOT / "build" / "sd"
 BOOT_BIF = BOOT_DIR / "boot.bif"
 BOOT_BIN = BOOT_DIR / "BOOT.BIN"
@@ -37,8 +37,8 @@ def main() -> int:
     parser.add_argument("--bootgen", default="bootgen")
     args = parser.parse_args()
 
-    fsbl = newest("*/dawn_platform/zynq_fsbl/build/fsbl.elf")
-    app = newest("*/dawn_controller/build/dawn_controller.elf")
+    fsbl = newest("*/donder_platform/zynq_fsbl/build/fsbl.elf")
+    app = newest("*/donder_controller/build/donder_controller.elf")
 
     if not BITSTREAM.exists():
         raise RuntimeError(f"Missing bitstream: {BITSTREAM}")

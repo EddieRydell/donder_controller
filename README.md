@@ -1,6 +1,6 @@
-# Dawn Controller
+# Donder Controller
 
-Dawn Controller is a PYNQ-Z2 E1.31/sACN to WS281x light-show controller. It receives E1.31 over the board Ethernet port, assembles complete RGB frames on the Zynq PS, commits them into PL frame RAM, and drives 30 parallel WS281x outputs.
+Donder Controller is a PYNQ-Z2 E1.31/sACN to WS281x light-show controller. It receives E1.31 over the board Ethernet port, assembles complete RGB frames on the Zynq PS, commits them into PL frame RAM, and drives 30 parallel WS281x outputs.
 
 ## Capabilities
 
@@ -73,7 +73,7 @@ Stream UART telemetry in another terminal:
 make logs
 ```
 
-The app prints `dawn controller starting`, the generated network and strand configuration, then one `e131_status ...` line per second.
+The app prints `donder controller starting`, the generated network and strand configuration, then one `e131_status ...` line per second.
 `make logs` should automatically discover ports. Use `make serial-ports` and `make logs PORT=COMx` if automatic port discovery fails.
 
 ## Network Setup
@@ -99,7 +99,7 @@ A successful test increments `rx_packets`, `e131_valid`, and `frames_committed` 
 
 ## E1.31 Layout
 
-Dawn accepts RGB data starting at universe `1`. Each E1.31 data slot stream is interpreted as one linear output-major frame:
+Donder accepts RGB data starting at universe `1`. Each E1.31 data slot stream is interpreted as one linear output-major frame:
 
 ```text
 output 0 pixel 0 RGB

@@ -4,7 +4,7 @@ set build_dir [file join $repo_root build vivado]
 
 file mkdir $build_dir
 
-create_project dawn_controller $build_dir -part xc7z020clg400-1 -force
+create_project donder_controller $build_dir -part xc7z020clg400-1 -force
 set_property target_language Verilog [current_project]
 set_property simulator_language Mixed [current_project]
 
@@ -17,7 +17,7 @@ if {[llength [get_board_parts -quiet $pynq_z2_board_part]] > 0} {
 }
 
 add_files -fileset sources_1 [list \
-  [file join $repo_root hw rtl generated dawn_pl_contract_pkg.sv] \
+  [file join $repo_root hw rtl generated donder_pl_contract_pkg.sv] \
   [file join $repo_root hw rtl generated pl_control_regs_pkg.sv] \
   [file join $repo_root hw rtl generated pl_control_regs.sv] \
   [file join $repo_root hw rtl pl_frame_control.sv] \
@@ -30,11 +30,11 @@ update_compile_order -fileset sources_1
 
 source [file join $script_dir ps_bd.tcl]
 
-set_property synth_checkpoint_mode None [get_files dawn_system.bd]
-generate_target all [get_files dawn_system.bd]
-make_wrapper -files [get_files dawn_system.bd] -top
-add_files -norecurse [file join $build_dir dawn_controller.gen sources_1 bd dawn_system hdl dawn_system_wrapper.v]
-set_property top dawn_system_wrapper [current_fileset]
+set_property synth_checkpoint_mode None [get_files donder_system.bd]
+generate_target all [get_files donder_system.bd]
+make_wrapper -files [get_files donder_system.bd] -top
+add_files -norecurse [file join $build_dir donder_controller.gen sources_1 bd donder_system hdl donder_system_wrapper.v]
+set_property top donder_system_wrapper [current_fileset]
 update_compile_order -fileset sources_1
 
 launch_runs synth_1 -jobs 8
@@ -50,6 +50,6 @@ if {[get_property PROGRESS [get_runs impl_1]] != "100%"} {
 }
 
 open_run impl_1
-write_hw_platform -fixed -include_bit -force [file join $build_dir dawn_controller.xsa]
+write_hw_platform -fixed -include_bit -force [file join $build_dir donder_controller.xsa]
 
 puts "Bitstream and XSA created at $build_dir"

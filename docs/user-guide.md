@@ -1,4 +1,4 @@
-# Dawn Controller User Guide
+# Donder Controller User Guide
 
 This guide assumes you are building the controller from source for a PYNQ-Z2 and using a direct Ethernet link from a host computer to the board.
 
@@ -35,7 +35,7 @@ Install the PYNQ-Z2 board files before `make hw`. The build script requires boar
 tul.com.tw:pynq-z2:part0:1.0
 ```
 
-See [PYNQ-Z2 board files](board-files.md) for the expected installation model. Dawn does not vendor these files in the repo.
+See [PYNQ-Z2 board files](board-files.md) for the expected installation model. Donder does not vendor these files in the repo.
 
 Install Python dependencies:
 
@@ -59,11 +59,11 @@ make boot
 
 Outputs:
 
-- `build/vivado/dawn_controller.xsa`
-- `build/vivado/dawn_controller.runs/impl_1/dawn_system_wrapper.bit`
+- `build/vivado/donder_controller.xsa`
+- `build/vivado/donder_controller.runs/impl_1/donder_system_wrapper.bit`
 - `build/sd/BOOT.BIN`
 
-`BOOT.BIN` contains the FSBL, FPGA bitstream, and bare-metal Dawn controller app.
+`BOOT.BIN` contains the FSBL, FPGA bitstream, and bare-metal Donder controller app.
 
 ## Run Over JTAG
 
@@ -89,7 +89,7 @@ make logs PORT=COMx
 Expected startup lines include:
 
 ```text
-dawn controller starting
+donder controller starting
 strand_config active_outputs=30 ... total_pixels=3390 ... expected_universes=20
 foundation ready source=e131
 e131_status link=...

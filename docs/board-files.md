@@ -1,6 +1,6 @@
 # PYNQ-Z2 Board Files
 
-Dawn does not vendor the PYNQ-Z2 Vivado board files. Install the official board files into Vivado before running `make hw`.
+Donder does not vendor the PYNQ-Z2 Vivado board files. Install the official board files into Vivado before running `make hw`.
 
 The build script expects Vivado to find this board part:
 
@@ -32,11 +32,11 @@ get_board_parts -quiet tul.com.tw:pynq-z2:part0:1.0
 
 The PYNQ-Z2 board files are vendor-provided Vivado metadata: board XML, processing-system presets, pin maps, and an image. They are required by Vivado, but they are not source code owned or maintained by this project.
 
-Keeping them outside the repo avoids license ambiguity, stale copied vendor data, and duplicate checked-in artifacts. Dawn keeps only the project-specific constraints and documentation needed for the 30 WS281x outputs.
+Keeping them outside the repo avoids license ambiguity, stale copied vendor data, and duplicate checked-in artifacts. Donder keeps only the project-specific constraints and documentation needed for the 30 WS281x outputs.
 
 ## Project-Owned Pin Constraints
 
-Dawn's output mapping is maintained in:
+Donder's output mapping is maintained in:
 
 ```text
 hw/constraints/pynq_z2.xdc

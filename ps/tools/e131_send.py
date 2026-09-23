@@ -61,7 +61,7 @@ def build_packet(universe, sequence, slots, cid, priority, sync_address, options
     packet[22:38] = cid.bytes
     packet[38:40] = struct.pack(">H", flags_and_length(total_len - 38))
     packet[40:44] = struct.pack(">I", 0x00000002)
-    source = b"dawn e131 sender"
+    source = b"donder e131 sender"
     packet[44:44 + len(source)] = source
     packet[108] = priority
     packet[109:111] = struct.pack(">H", sync_address)

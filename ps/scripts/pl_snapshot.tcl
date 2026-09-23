@@ -1,7 +1,7 @@
 set repo_root [file normalize [file join [file dirname [info script]] .. ..]]
 source [file join $repo_root hw scripts generated pl_config.tcl]
-set hw_server_url "TCP:localhost:$dawn_pl_jtag_hw_server_port"
-set pl_control_base $dawn_pl_control_baseaddr
+set hw_server_url "TCP:localhost:$donder_pl_jtag_hw_server_port"
+set pl_control_base $donder_pl_control_baseaddr
 
 proc mrd32 {addr} {
     set value [mrd -force -value $addr 1]
@@ -13,16 +13,16 @@ proc select_or_error {filter} {
 }
 
 proc pl_reg_addr {name {index 0}} {
-    global pl_control_base dawn_pl_reg_offset dawn_pl_reg_count dawn_pl_reg_stride
-    if {![info exists dawn_pl_reg_offset($name)]} {
+    global pl_control_base donder_pl_reg_offset donder_pl_reg_count donder_pl_reg_stride
+    if {![info exists donder_pl_reg_offset($name)]} {
         error "Unknown PL register: $name"
     }
-    set offset $dawn_pl_reg_offset($name)
-    if {[info exists dawn_pl_reg_count($name)]} {
-        if {$index < 0 || $index >= $dawn_pl_reg_count($name)} {
+    set offset $donder_pl_reg_offset($name)
+    if {[info exists donder_pl_reg_count($name)]} {
+        if {$index < 0 || $index >= $donder_pl_reg_count($name)} {
             error "PL register index out of range: $name\[$index\]"
         }
-        set offset [expr {$offset + ($index * $dawn_pl_reg_stride($name))}]
+        set offset [expr {$offset + ($index * $donder_pl_reg_stride($name))}]
     } elseif {$index != 0} {
         error "PL register is not arrayed: $name"
     }

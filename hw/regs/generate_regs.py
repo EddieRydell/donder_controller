@@ -18,11 +18,11 @@ PS_HEADER = REPO_ROOT / "ps" / "app" / "pl_control.h"
 PS_CONFIG_HEADER = REPO_ROOT / "ps" / "app" / "generated" / "pl_config.h"
 PY_CONFIG = REPO_ROOT / "ps" / "tools" / "generated" / "pl_config.py"
 RTL_DIR = REPO_ROOT / "hw" / "rtl" / "generated"
-RTL_CONFIG = RTL_DIR / "dawn_pl_contract_pkg.sv"
+RTL_CONFIG = RTL_DIR / "donder_pl_contract_pkg.sv"
 TCL_CONFIG = REPO_ROOT / "hw" / "scripts" / "generated" / "pl_config.tcl"
 DOCS_DIR = REPO_ROOT / "build" / "docs" / "regs" / "pl_control"
 PL_CONTROL_TOP = "pl_control"
-SYSTEM_TOP = "dawn_pl"
+SYSTEM_TOP = "donder_pl"
 CONTROL_INST = "control"
 FRAME_RAM_INST = "frame_ram"
 
@@ -238,7 +238,7 @@ def write_if_changed(path, text):
 
 def emit_config_artifacts(out_root, config, regs):
     ps_config = out_root / "ps" / "app" / "generated" / "pl_config.h"
-    rtl_config = out_root / "hw" / "rtl" / "generated" / "dawn_pl_contract_pkg.sv"
+    rtl_config = out_root / "hw" / "rtl" / "generated" / "donder_pl_contract_pkg.sv"
     tcl_config = out_root / "hw" / "scripts" / "generated" / "pl_config.tcl"
     py_config = out_root / "ps" / "tools" / "generated" / "pl_config.py"
 
@@ -249,13 +249,13 @@ def emit_config_artifacts(out_root, config, regs):
         "",
     ]
     for name, value in config.items():
-        c_lines.append(f"#define DAWN_PL_{name} {c_uint(value)}")
+        c_lines.append(f"#define DONDER_PL_{name} {c_uint(value)}")
     c_lines.extend(["", "#endif", ""])
     write_if_changed(ps_config, "\n".join(c_lines))
 
     sv_lines = [
         "`timescale 1ns / 1ps",
-        "package dawn_pl_contract_pkg;",
+        "package donder_pl_contract_pkg;",
     ]
     for name, value in config.items():
         sv_lines.append(f"    localparam int {name} = {value};")
@@ -274,15 +274,15 @@ def emit_config_artifacts(out_root, config, regs):
 
     tcl_lines = ["# Generated from hw/regs/pl_control.rdl. Do not edit."]
     for name, value in config.items():
-        tcl_lines.append(f"set dawn_pl_{name.lower()} {value}")
+        tcl_lines.append(f"set donder_pl_{name.lower()} {value}")
     tcl_lines.append("")
     for name, metadata in regs.items():
-        tcl_lines.append(f"set dawn_pl_reg_offset({name}) {metadata['offset']}")
+        tcl_lines.append(f"set donder_pl_reg_offset({name}) {metadata['offset']}")
     tcl_lines.append("")
     for name, metadata in regs.items():
         if metadata["arrayed"]:
-            tcl_lines.append(f"set dawn_pl_reg_count({name}) {metadata['count']}")
-            tcl_lines.append(f"set dawn_pl_reg_stride({name}) {metadata['stride']}")
+            tcl_lines.append(f"set donder_pl_reg_count({name}) {metadata['count']}")
+            tcl_lines.append(f"set donder_pl_reg_stride({name}) {metadata['stride']}")
     tcl_lines.append("")
     write_if_changed(tcl_config, "\n".join(tcl_lines))
 
@@ -355,7 +355,7 @@ def generate(out_root, include_docs=True):
         "-o",
         str(docs_dir),
         "--title",
-        "Dawn Controller PL Control Registers",
+        "Donder Controller PL Control Registers",
         str(RDL),
     ])
     index_html = docs_dir / "index.html"

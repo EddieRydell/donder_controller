@@ -1,10 +1,10 @@
 set repo_root [file normalize [file join [file dirname [info script]] .. ..]]
 source [file join $repo_root hw scripts generated pl_config.tcl]
-set hw_server_url "TCP:localhost:$dawn_pl_jtag_hw_server_port"
-set bit_file [file join $repo_root build vivado dawn_controller.runs impl_1 dawn_system_wrapper.bit]
+set hw_server_url "TCP:localhost:$donder_pl_jtag_hw_server_port"
+set bit_file [file join $repo_root build vivado donder_controller.runs impl_1 donder_system_wrapper.bit]
 set vitis_workspace [file join $repo_root build vitis]
-set pl_control_base $dawn_pl_control_baseaddr
-set pl_frame_base $dawn_pl_frame_ram_baseaddr
+set pl_control_base $donder_pl_control_baseaddr
+set pl_frame_base $donder_pl_frame_ram_baseaddr
 set bench_active_outputs ""
 set bench_pixels_per_output ""
 
@@ -63,16 +63,16 @@ proc print_reg {base offset name} {
 }
 
 proc pl_reg_addr {name {index 0}} {
-    global pl_control_base dawn_pl_reg_offset dawn_pl_reg_count dawn_pl_reg_stride
-    if {![info exists dawn_pl_reg_offset($name)]} {
+    global pl_control_base donder_pl_reg_offset donder_pl_reg_count donder_pl_reg_stride
+    if {![info exists donder_pl_reg_offset($name)]} {
         error "Unknown PL register: $name"
     }
-    set offset $dawn_pl_reg_offset($name)
-    if {[info exists dawn_pl_reg_count($name)]} {
-        if {$index < 0 || $index >= $dawn_pl_reg_count($name)} {
+    set offset $donder_pl_reg_offset($name)
+    if {[info exists donder_pl_reg_count($name)]} {
+        if {$index < 0 || $index >= $donder_pl_reg_count($name)} {
             error "PL register index out of range: $name\[$index\]"
         }
-        set offset [expr {$offset + ($index * $dawn_pl_reg_stride($name))}]
+        set offset [expr {$offset + ($index * $donder_pl_reg_stride($name))}]
     } elseif {$index != 0} {
         error "PL register is not arrayed: $name"
     }
@@ -108,7 +108,7 @@ proc post_config_pl {} {
 }
 
 proc configure_runtime_strands {active_outputs pixels_per_output} {
-    global dawn_pl_output_count
+    global donder_pl_output_count
     if {$active_outputs eq "" && $pixels_per_output eq ""} {
         return
     }
@@ -117,7 +117,7 @@ proc configure_runtime_strands {active_outputs pixels_per_output} {
     }
     puts [format "CONFIGURE_RUNTIME_STRANDS active_outputs=%u pixels_per_output=%u" $active_outputs $pixels_per_output]
     mwr32 [pl_reg_addr ACTIVE_OUTPUT_COUNT] $active_outputs
-    for {set output 0} {$output < $dawn_pl_output_count} {incr output} {
+    for {set output 0} {$output < $donder_pl_output_count} {incr output} {
         set length [expr {$output < $active_outputs ? $pixels_per_output : 0}]
         mwr32 [pl_reg_addr STRAND_PIXEL_COUNT $output] $length
     }
@@ -130,8 +130,8 @@ if {![file exists $bit_file]} {
     error "Missing bitstream: $bit_file"
 }
 
-set app [newest [file join $vitis_workspace * dawn_controller build dawn_controller.elf]]
-set fsbl [newest [file join $vitis_workspace * dawn_platform zynq_fsbl build fsbl.elf]]
+set app [newest [file join $vitis_workspace * donder_controller build donder_controller.elf]]
+set fsbl [newest [file join $vitis_workspace * donder_platform zynq_fsbl build fsbl.elf]]
 
 puts "CONNECT $hw_server_url"
 connect -url $hw_server_url

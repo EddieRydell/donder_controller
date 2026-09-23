@@ -48,10 +48,10 @@ STRICT_CONTRACT_NAME_RE = re.compile(
 )
 NUMERIC_LITERAL_RE = re.compile(r"(?<![A-Za-z0-9_])(?:0x[0-9a-fA-F]+|\d+)(?:u|U)?(?![A-Za-z0-9_])")
 RDL_DEFINE_RE = re.compile(r"`define\s+([A-Z0-9_]+)\s+(.+)$")
-C_DEFINE_RE = re.compile(r"#\s*define\s+DAWN_PL_([A-Z0-9_]+)\s+((?:0x[0-9a-fA-F]+|\d+)(?:u|U)?)\b")
+C_DEFINE_RE = re.compile(r"#\s*define\s+DONDER_PL_([A-Z0-9_]+)\s+((?:0x[0-9a-fA-F]+|\d+)(?:u|U)?)\b")
 PY_ASSIGN_RE = re.compile(r"^([A-Z][A-Z0-9_]*)\s*=\s*(0x[0-9a-fA-F]+|\d+)\b")
-TCL_SET_RE = re.compile(r"^set\s+dawn_pl_([a-z0-9_]+)\s+(0x[0-9a-fA-F]+|\d+)\b")
-SOURCED_FROM_GENERATED_RE = re.compile(r"\b(?:DAWN_PL_[A-Z0-9_]+|pl_config\.[A-Z0-9_]+|dawn_pl_contract_pkg::[A-Z0-9_]+|\$dawn_pl_[a-z0-9_]+)\b")
+TCL_SET_RE = re.compile(r"^set\s+donder_pl_([a-z0-9_]+)\s+(0x[0-9a-fA-F]+|\d+)\b")
+SOURCED_FROM_GENERATED_RE = re.compile(r"\b(?:DONDER_PL_[A-Z0-9_]+|pl_config\.[A-Z0-9_]+|donder_pl_contract_pkg::[A-Z0-9_]+|\$donder_pl_[a-z0-9_]+)\b")
 SUSPICIOUS_DEFAULT_RE = re.compile(
     r"(?:env_int\([^,\n]+,\s*(?:0x[0-9a-fA-F]+|\d+)|"
     r"add_argument\(\"--(?:source-ip|dest-ip|port|first-universe|outputs|pixels-per-output|baud)\"[^\n]*default=(?:\"[^\"]+\"|0x[0-9a-fA-F]+|\d+)|"
@@ -180,7 +180,7 @@ def load_generated_contract(findings: list[str]) -> dict[str, int]:
 
 
 def extract_candidate_dict_line(line: str) -> dict[str, int] | None:
-    if "DAWN_LWIP_" not in line or "{" not in line:
+    if "DONDER_LWIP_" not in line or "{" not in line:
         return None
     try:
         candidate = ast.literal_eval(line[line.index("{"):].rstrip(","))
@@ -190,7 +190,7 @@ def extract_candidate_dict_line(line: str) -> dict[str, int] | None:
         return None
     parsed: dict[str, int] = {}
     for key, value in candidate.items():
-        if isinstance(key, str) and key.startswith("DAWN_LWIP_") and isinstance(value, int):
+        if isinstance(key, str) and key.startswith("DONDER_LWIP_") and isinstance(value, int):
             parsed[key] = value
     return parsed if parsed else None
 
@@ -225,7 +225,7 @@ def scan_for_violations(path: Path, contract: dict[str, int]) -> list[str]:
             continue
 
         if is_benchmark_matrix_path(path):
-            if rel == "ps/tools/e131_ingress_profile.py" and "DAWN_LWIP_" in line:
+            if rel == "ps/tools/e131_ingress_profile.py" and "DONDER_LWIP_" in line:
                 continue
             if extract_candidate_dict_line(stripped) is not None:
                 continue

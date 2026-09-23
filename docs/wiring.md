@@ -1,6 +1,6 @@
 # Wiring Guide
 
-Dawn exposes `ws281x_data[0]` through `ws281x_data[29]` as 30 parallel WS281x data outputs.
+Donder exposes `ws281x_data[0]` through `ws281x_data[29]` as 30 parallel WS281x data outputs.
 
 The pins are configured as 3.3 V `LVCMOS33` outputs with drive strength 8 and slow slew in `hw/constraints/pynq_z2.xdc`.
 
@@ -58,4 +58,4 @@ If runtime configuration changes the active output count or strand length, the m
 
 ## Signal Inversion
 
-The default output inversion mask is generated as `DAWN_PL_DEFAULT_OUTPUT_INVERT_MASK`, currently all 30 outputs inverted. The firmware applies this generated default during startup. Change the value in `hw/regs/pl_control.rdl` and regenerate with `make regs` if the downstream hardware needs non-inverted outputs.
+The default output inversion mask is generated as `DONDER_PL_DEFAULT_OUTPUT_INVERT_MASK`, currently all 30 outputs inverted. The firmware applies this generated default during startup. Change the value in `hw/regs/pl_control.rdl` and regenerate with `make regs` if the downstream hardware needs non-inverted outputs.

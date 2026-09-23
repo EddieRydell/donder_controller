@@ -1,48 +1,48 @@
 `timescale 1ns / 1ps
 
 module tb_ws281x_consumer;
-    localparam AXIL_ADDR_WIDTH = dawn_pl_contract_pkg::CONTROL_ADDR_WIDTH;
+    localparam AXIL_ADDR_WIDTH = donder_pl_contract_pkg::CONTROL_ADDR_WIDTH;
     localparam FRAME_ADDR_WIDTH = 10;
-    localparam OUTPUT_COUNT = dawn_pl_contract_pkg::OUTPUT_COUNT;
+    localparam OUTPUT_COUNT = donder_pl_contract_pkg::OUTPUT_COUNT;
     localparam PIXELS_PER_OUTPUT = 2;
     localparam FRAME_WORDS = 160;
-    localparam [31:0] PL_CONTROL_ID_VALUE = dawn_pl_contract_pkg::REG_ID_RESET;
-    localparam [31:0] PL_CONTROL_VERSION_VALUE = dawn_pl_contract_pkg::REG_VERSION_RESET;
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_ID_OFFSET = dawn_pl_contract_pkg::REG_ID_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_VERSION_OFFSET = dawn_pl_contract_pkg::REG_VERSION_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_CONTROL_OFFSET = dawn_pl_contract_pkg::REG_CONTROL_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_STATUS_OFFSET = dawn_pl_contract_pkg::REG_STATUS_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_FRAME_COMMIT_OFFSET = dawn_pl_contract_pkg::REG_FRAME_COMMIT_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_FRAME_COUNT_OFFSET = dawn_pl_contract_pkg::REG_FRAME_COUNT_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_COMMITTED_WORDS_OFFSET = dawn_pl_contract_pkg::REG_COMMITTED_WORDS_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_ERROR_COUNT_OFFSET = dawn_pl_contract_pkg::REG_ERROR_COUNT_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_FRAME_BANK_WORDS_OFFSET = dawn_pl_contract_pkg::REG_FRAME_BANK_WORDS_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_ACTIVE_BANK_OFFSET = dawn_pl_contract_pkg::REG_ACTIVE_BANK_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_WRITE_BANK_OFFSET = dawn_pl_contract_pkg::REG_WRITE_BANK_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_FRAME_SEQUENCE_OFFSET = dawn_pl_contract_pkg::REG_FRAME_SEQUENCE_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_CONSUMER_CONTROL_OFFSET = dawn_pl_contract_pkg::REG_CONSUMER_CONTROL_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_CONSUMER_STATUS_OFFSET = dawn_pl_contract_pkg::REG_CONSUMER_STATUS_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_CONSUMER_SEQUENCE_OFFSET = dawn_pl_contract_pkg::REG_CONSUMER_SEQUENCE_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_CONSUMER_FRAME_COUNT_OFFSET = dawn_pl_contract_pkg::REG_CONSUMER_FRAME_COUNT_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_CONSUMER_ERROR_COUNT_OFFSET = dawn_pl_contract_pkg::REG_CONSUMER_ERROR_COUNT_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_CONSUMER_DEBUG_OFFSET = dawn_pl_contract_pkg::REG_CONSUMER_DEBUG_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_WRITE_BANK_VALID_OFFSET = dawn_pl_contract_pkg::REG_WRITE_BANK_VALID_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_BUSY_BANK_OFFSET = dawn_pl_contract_pkg::REG_BUSY_BANK_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_FRAME_DROPPED_OFFSET = dawn_pl_contract_pkg::REG_FRAME_DROPPED_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_FRAME_REJECTED_OFFSET = dawn_pl_contract_pkg::REG_FRAME_REJECTED_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_FRAME_DROP_NOTIFY_OFFSET = dawn_pl_contract_pkg::REG_FRAME_DROP_NOTIFY_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_ACTIVE_OUTPUT_COUNT_OFFSET = dawn_pl_contract_pkg::REG_ACTIVE_OUTPUT_COUNT_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_STRAND_PIXEL_COUNT_OFFSET = dawn_pl_contract_pkg::REG_STRAND_PIXEL_COUNT_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_CONFIG_STATUS_OFFSET = dawn_pl_contract_pkg::REG_CONFIG_STATUS_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_STRAND_LENGTH_CLAMPED_OFFSET = dawn_pl_contract_pkg::REG_STRAND_LENGTH_CLAMPED_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_OUTPUT_INVERT_MASK_OFFSET = dawn_pl_contract_pkg::REG_OUTPUT_INVERT_MASK_OFFSET[AXIL_ADDR_WIDTH-1:0];
-    localparam [31:0] PL_CONTROL_STATUS_READY = dawn_pl_contract_pkg::REG_STATUS_ready_MASK;
-    localparam [31:0] PL_CONTROL_STATUS_OVERFLOW = dawn_pl_contract_pkg::REG_STATUS_overflow_MASK;
-    localparam [31:0] PL_CONTROL_STATUS_COMMIT_REJECTED = dawn_pl_contract_pkg::REG_STATUS_commit_rejected_MASK;
-    localparam [31:0] PL_CONTROL_CONTROL_CLEAR_ERRORS = dawn_pl_contract_pkg::REG_CONTROL_clear_errors_MASK;
-    localparam [31:0] PL_CONTROL_CONSUMER_ENABLE = dawn_pl_contract_pkg::REG_CONSUMER_CONTROL_enable_MASK;
-    localparam [31:0] PL_CONTROL_CONSUMER_RESET = dawn_pl_contract_pkg::REG_CONSUMER_CONTROL_reset_fsm_MASK;
-    localparam [31:0] PL_CONTROL_CONSUMER_BUSY = dawn_pl_contract_pkg::REG_CONSUMER_STATUS_busy_MASK;
+    localparam [31:0] PL_CONTROL_ID_VALUE = donder_pl_contract_pkg::REG_ID_RESET;
+    localparam [31:0] PL_CONTROL_VERSION_VALUE = donder_pl_contract_pkg::REG_VERSION_RESET;
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_ID_OFFSET = donder_pl_contract_pkg::REG_ID_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_VERSION_OFFSET = donder_pl_contract_pkg::REG_VERSION_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_CONTROL_OFFSET = donder_pl_contract_pkg::REG_CONTROL_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_STATUS_OFFSET = donder_pl_contract_pkg::REG_STATUS_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_FRAME_COMMIT_OFFSET = donder_pl_contract_pkg::REG_FRAME_COMMIT_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_FRAME_COUNT_OFFSET = donder_pl_contract_pkg::REG_FRAME_COUNT_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_COMMITTED_WORDS_OFFSET = donder_pl_contract_pkg::REG_COMMITTED_WORDS_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_ERROR_COUNT_OFFSET = donder_pl_contract_pkg::REG_ERROR_COUNT_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_FRAME_BANK_WORDS_OFFSET = donder_pl_contract_pkg::REG_FRAME_BANK_WORDS_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_ACTIVE_BANK_OFFSET = donder_pl_contract_pkg::REG_ACTIVE_BANK_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_WRITE_BANK_OFFSET = donder_pl_contract_pkg::REG_WRITE_BANK_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_FRAME_SEQUENCE_OFFSET = donder_pl_contract_pkg::REG_FRAME_SEQUENCE_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_CONSUMER_CONTROL_OFFSET = donder_pl_contract_pkg::REG_CONSUMER_CONTROL_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_CONSUMER_STATUS_OFFSET = donder_pl_contract_pkg::REG_CONSUMER_STATUS_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_CONSUMER_SEQUENCE_OFFSET = donder_pl_contract_pkg::REG_CONSUMER_SEQUENCE_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_CONSUMER_FRAME_COUNT_OFFSET = donder_pl_contract_pkg::REG_CONSUMER_FRAME_COUNT_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_CONSUMER_ERROR_COUNT_OFFSET = donder_pl_contract_pkg::REG_CONSUMER_ERROR_COUNT_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_CONSUMER_DEBUG_OFFSET = donder_pl_contract_pkg::REG_CONSUMER_DEBUG_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_WRITE_BANK_VALID_OFFSET = donder_pl_contract_pkg::REG_WRITE_BANK_VALID_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_BUSY_BANK_OFFSET = donder_pl_contract_pkg::REG_BUSY_BANK_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_FRAME_DROPPED_OFFSET = donder_pl_contract_pkg::REG_FRAME_DROPPED_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_FRAME_REJECTED_OFFSET = donder_pl_contract_pkg::REG_FRAME_REJECTED_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_FRAME_DROP_NOTIFY_OFFSET = donder_pl_contract_pkg::REG_FRAME_DROP_NOTIFY_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_ACTIVE_OUTPUT_COUNT_OFFSET = donder_pl_contract_pkg::REG_ACTIVE_OUTPUT_COUNT_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_STRAND_PIXEL_COUNT_OFFSET = donder_pl_contract_pkg::REG_STRAND_PIXEL_COUNT_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_CONFIG_STATUS_OFFSET = donder_pl_contract_pkg::REG_CONFIG_STATUS_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_STRAND_LENGTH_CLAMPED_OFFSET = donder_pl_contract_pkg::REG_STRAND_LENGTH_CLAMPED_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [AXIL_ADDR_WIDTH-1:0] PL_CONTROL_OUTPUT_INVERT_MASK_OFFSET = donder_pl_contract_pkg::REG_OUTPUT_INVERT_MASK_OFFSET[AXIL_ADDR_WIDTH-1:0];
+    localparam [31:0] PL_CONTROL_STATUS_READY = donder_pl_contract_pkg::REG_STATUS_ready_MASK;
+    localparam [31:0] PL_CONTROL_STATUS_OVERFLOW = donder_pl_contract_pkg::REG_STATUS_overflow_MASK;
+    localparam [31:0] PL_CONTROL_STATUS_COMMIT_REJECTED = donder_pl_contract_pkg::REG_STATUS_commit_rejected_MASK;
+    localparam [31:0] PL_CONTROL_CONTROL_CLEAR_ERRORS = donder_pl_contract_pkg::REG_CONTROL_clear_errors_MASK;
+    localparam [31:0] PL_CONTROL_CONSUMER_ENABLE = donder_pl_contract_pkg::REG_CONSUMER_CONTROL_enable_MASK;
+    localparam [31:0] PL_CONTROL_CONSUMER_RESET = donder_pl_contract_pkg::REG_CONSUMER_CONTROL_reset_fsm_MASK;
+    localparam [31:0] PL_CONTROL_CONSUMER_BUSY = donder_pl_contract_pkg::REG_CONSUMER_STATUS_busy_MASK;
 
     reg aclk = 1'b0;
     reg aresetn = 1'b0;
@@ -145,7 +145,7 @@ module tb_ws281x_consumer;
         .OUTPUT_COUNT(OUTPUT_COUNT),
         .PIXELS_PER_OUTPUT(PIXELS_PER_OUTPUT),
         .CLK_HZ(100000000),
-        .WS281X_BIT_RATE(dawn_pl_contract_pkg::WS281X_BIT_RATE)
+        .WS281X_BIT_RATE(donder_pl_contract_pkg::WS281X_BIT_RATE)
     ) dut (
         .aclk(aclk),
         .aresetn(aresetn),
@@ -336,11 +336,11 @@ module tb_ws281x_consumer;
         end
 
         ctl_read(PL_CONTROL_ACTIVE_OUTPUT_COUNT_OFFSET, read_data);
-        if (read_data != dawn_pl_contract_pkg::DEFAULT_ACTIVE_OUTPUT_COUNT) begin
+        if (read_data != donder_pl_contract_pkg::DEFAULT_ACTIVE_OUTPUT_COUNT) begin
             $fatal(1, "default active output count is %08x", read_data);
         end
         ctl_read(PL_CONTROL_OUTPUT_INVERT_MASK_OFFSET, read_data);
-        if (read_data != dawn_pl_contract_pkg::DEFAULT_OUTPUT_INVERT_MASK) begin
+        if (read_data != donder_pl_contract_pkg::DEFAULT_OUTPUT_INVERT_MASK) begin
             $fatal(1, "default output invert mask is %08x", read_data);
         end
         ctl_write(PL_CONTROL_ACTIVE_OUTPUT_COUNT_OFFSET, 32'h0000_0004);

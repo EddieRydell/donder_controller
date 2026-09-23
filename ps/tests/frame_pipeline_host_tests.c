@@ -10,13 +10,13 @@
 static uint32_t g_write_frame_calls;
 static uint32_t g_configure_calls;
 static uint32_t g_last_frame_active_count;
-static uint32_t g_last_frame_lengths[DAWN_OUTPUT_COUNT];
+static uint32_t g_last_frame_lengths[DONDER_OUTPUT_COUNT];
 static uint32_t g_last_frame_pixels_per_output;
 static uint32_t g_last_frame_required_words;
 static uint32_t g_last_frame_first_word;
 static uint32_t g_last_frame_last_word;
 static uint32_t g_last_configure_active_count;
-static uint32_t g_last_configure_lengths[DAWN_OUTPUT_COUNT];
+static uint32_t g_last_configure_lengths[DONDER_OUTPUT_COUNT];
 
 uint32_t pl_ingest_read(uint32_t offset)
 {
@@ -43,27 +43,27 @@ const pl_ingest_write_stats_t *pl_ingest_write_stats(void)
 
 pl_ingest_result_t pl_ingest_get_config(pl_ingest_config_t *config)
 {
-    config->max_output_count = DAWN_OUTPUT_COUNT;
-    config->max_pixels_per_output = DAWN_PIXELS_PER_OUTPUT;
-    config->active_output_count = DAWN_DEFAULT_ACTIVE_OUTPUT_COUNT;
-    config->effective_active_output_count = DAWN_DEFAULT_ACTIVE_OUTPUT_COUNT;
+    config->max_output_count = DONDER_OUTPUT_COUNT;
+    config->max_pixels_per_output = DONDER_PIXELS_PER_OUTPUT;
+    config->active_output_count = DONDER_DEFAULT_ACTIVE_OUTPUT_COUNT;
+    config->effective_active_output_count = DONDER_DEFAULT_ACTIVE_OUTPUT_COUNT;
     config->required_words = 0u;
     config->config_status = 0u;
-    for (uint32_t output = 0u; output < DAWN_OUTPUT_COUNT; ++output) {
-        uint32_t length = output < DAWN_DEFAULT_ACTIVE_OUTPUT_COUNT ? DAWN_DEFAULT_STRAND_PIXEL_COUNT : 0u;
+    for (uint32_t output = 0u; output < DONDER_OUTPUT_COUNT; ++output) {
+        uint32_t length = output < DONDER_DEFAULT_ACTIVE_OUTPUT_COUNT ? DONDER_DEFAULT_STRAND_PIXEL_COUNT : 0u;
         config->strand_pixel_count[output] = length;
         config->effective_strand_pixel_count[output] = length;
     }
-    for (uint32_t word = 0u; word < DAWN_PL_MASK_WORD_COUNT; ++word) {
+    for (uint32_t word = 0u; word < DONDER_PL_MASK_WORD_COUNT; ++word) {
         config->strand_length_clamped[word] = 0u;
-        config->output_invert_mask[word] = DAWN_OUTPUT_INVERT_MASK;
+        config->output_invert_mask[word] = DONDER_OUTPUT_INVERT_MASK;
     }
     return PL_INGEST_OK;
 }
 
 pl_ingest_result_t pl_ingest_write_frame_strands(const uint32_t *words,
                                                  uint32_t active_count,
-                                                 const uint32_t lengths[DAWN_OUTPUT_COUNT],
+                                                 const uint32_t lengths[DONDER_OUTPUT_COUNT],
                                                  uint32_t pixels_per_output,
                                                  uint32_t required_words)
 {
@@ -77,7 +77,7 @@ pl_ingest_result_t pl_ingest_write_frame_strands(const uint32_t *words,
     return PL_INGEST_OK;
 }
 
-pl_ingest_result_t pl_ingest_configure_strands(uint32_t active_count, const uint32_t lengths[DAWN_OUTPUT_COUNT])
+pl_ingest_result_t pl_ingest_configure_strands(uint32_t active_count, const uint32_t lengths[DONDER_OUTPUT_COUNT])
 {
     g_configure_calls++;
     g_last_configure_active_count = active_count;
@@ -141,33 +141,33 @@ static int reset_state(void)
     return 0;
 }
 
-static void default_lengths(uint32_t lengths[DAWN_OUTPUT_COUNT])
+static void default_lengths(uint32_t lengths[DONDER_OUTPUT_COUNT])
 {
-    for (uint32_t output = 0u; output < DAWN_OUTPUT_COUNT; ++output) {
-        lengths[output] = DAWN_DEFAULT_STRAND_PIXEL_COUNT;
+    for (uint32_t output = 0u; output < DONDER_OUTPUT_COUNT; ++output) {
+        lengths[output] = DONDER_DEFAULT_STRAND_PIXEL_COUNT;
     }
 }
 
 static int test_default_config_commits_default_shape(void)
 {
     if (reset_state() != 0) return 1;
-    EXPECT_EQ(DAWN_OUTPUT_COUNT, DAWN_DEFAULT_ACTIVE_OUTPUT_COUNT);
-    EXPECT_EQ(DAWN_PIN_OUTPUT_COUNT, DAWN_OUTPUT_COUNT);
-    EXPECT_EQ(frame_pipeline_active_pixel_count(), DAWN_DEFAULT_ACTIVE_OUTPUT_COUNT * DAWN_DEFAULT_STRAND_PIXEL_COUNT);
+    EXPECT_EQ(DONDER_OUTPUT_COUNT, DONDER_DEFAULT_ACTIVE_OUTPUT_COUNT);
+    EXPECT_EQ(DONDER_PIN_OUTPUT_COUNT, DONDER_OUTPUT_COUNT);
+    EXPECT_EQ(frame_pipeline_active_pixel_count(), DONDER_DEFAULT_ACTIVE_OUTPUT_COUNT * DONDER_DEFAULT_STRAND_PIXEL_COUNT);
 
     EXPECT_EQ(frame_pipeline_commit(), 0u);
     EXPECT_EQ(g_write_frame_calls, 1u);
-    EXPECT_EQ(g_last_frame_active_count, DAWN_DEFAULT_ACTIVE_OUTPUT_COUNT);
-    EXPECT_EQ(g_last_frame_pixels_per_output, DAWN_PIXELS_PER_OUTPUT);
-    EXPECT_EQ(g_last_frame_required_words, ((DAWN_DEFAULT_ACTIVE_OUTPUT_COUNT - 1u) * DAWN_PIXELS_PER_OUTPUT) + DAWN_DEFAULT_STRAND_PIXEL_COUNT);
-    EXPECT_EQ(g_last_frame_lengths[0], DAWN_DEFAULT_STRAND_PIXEL_COUNT);
-    EXPECT_EQ(g_last_frame_lengths[DAWN_DEFAULT_ACTIVE_OUTPUT_COUNT - 1u], DAWN_DEFAULT_STRAND_PIXEL_COUNT);
+    EXPECT_EQ(g_last_frame_active_count, DONDER_DEFAULT_ACTIVE_OUTPUT_COUNT);
+    EXPECT_EQ(g_last_frame_pixels_per_output, DONDER_PIXELS_PER_OUTPUT);
+    EXPECT_EQ(g_last_frame_required_words, ((DONDER_DEFAULT_ACTIVE_OUTPUT_COUNT - 1u) * DONDER_PIXELS_PER_OUTPUT) + DONDER_DEFAULT_STRAND_PIXEL_COUNT);
+    EXPECT_EQ(g_last_frame_lengths[0], DONDER_DEFAULT_STRAND_PIXEL_COUNT);
+    EXPECT_EQ(g_last_frame_lengths[DONDER_DEFAULT_ACTIVE_OUTPUT_COUNT - 1u], DONDER_DEFAULT_STRAND_PIXEL_COUNT);
     return 0;
 }
 
 static int test_sparse_linear_mapping(void)
 {
-    uint32_t lengths[DAWN_OUTPUT_COUNT] = {0u};
+    uint32_t lengths[DONDER_OUTPUT_COUNT] = {0u};
     uint8_t slots[] = {
         1u, 2u, 3u,
         4u, 5u, 6u,
@@ -185,9 +185,9 @@ static int test_sparse_linear_mapping(void)
     EXPECT_EQ(frame_pipeline_write_linear_rgb(0u, slots, 4u), 0u);
     words = frame_pipeline_inactive_words();
     EXPECT_EQ(words[0], 0x00010203u);
-    EXPECT_EQ(words[DAWN_PIXELS_PER_OUTPUT], 0x00040506u);
-    EXPECT_EQ(words[DAWN_PIXELS_PER_OUTPUT + 1u], 0x00070809u);
-    EXPECT_EQ(words[3u * DAWN_PIXELS_PER_OUTPUT], 0x000a0b0cu);
+    EXPECT_EQ(words[DONDER_PIXELS_PER_OUTPUT], 0x00040506u);
+    EXPECT_EQ(words[DONDER_PIXELS_PER_OUTPUT + 1u], 0x00070809u);
+    EXPECT_EQ(words[3u * DONDER_PIXELS_PER_OUTPUT], 0x000a0b0cu);
     EXPECT_EQ(frame_pipeline_commit(), 0u);
     EXPECT_EQ(g_last_frame_required_words, 3073u);
     return 0;
@@ -212,7 +212,7 @@ static int test_writes_only_current_staging_frame(void)
 
 static int test_shrink_commits_black_frame_before_reconfiguring(void)
 {
-    uint32_t lengths[DAWN_OUTPUT_COUNT];
+    uint32_t lengths[DONDER_OUTPUT_COUNT];
 
     if (reset_state() != 0) return 1;
     default_lengths(lengths);
@@ -224,8 +224,8 @@ static int test_shrink_commits_black_frame_before_reconfiguring(void)
     lengths[1] = 5u;
     EXPECT_EQ(frame_pipeline_configure(2u, lengths), 0u);
     EXPECT_EQ(g_write_frame_calls, 1u);
-    EXPECT_EQ(g_last_frame_active_count, DAWN_DEFAULT_ACTIVE_OUTPUT_COUNT);
-    EXPECT_EQ(g_last_frame_required_words, ((DAWN_DEFAULT_ACTIVE_OUTPUT_COUNT - 1u) * DAWN_PIXELS_PER_OUTPUT) + DAWN_DEFAULT_STRAND_PIXEL_COUNT);
+    EXPECT_EQ(g_last_frame_active_count, DONDER_DEFAULT_ACTIVE_OUTPUT_COUNT);
+    EXPECT_EQ(g_last_frame_required_words, ((DONDER_DEFAULT_ACTIVE_OUTPUT_COUNT - 1u) * DONDER_PIXELS_PER_OUTPUT) + DONDER_DEFAULT_STRAND_PIXEL_COUNT);
     EXPECT_EQ(g_last_frame_first_word, 0u);
     EXPECT_EQ(g_last_frame_last_word, 0u);
     EXPECT_EQ(g_configure_calls, 2u);
@@ -240,21 +240,21 @@ static int test_shrink_commits_black_frame_before_reconfiguring(void)
 
 static int test_oversized_config_uses_clamped_local_shape(void)
 {
-    uint32_t lengths[DAWN_OUTPUT_COUNT];
+    uint32_t lengths[DONDER_OUTPUT_COUNT];
 
     if (reset_state() != 0) return 1;
-    for (uint32_t output = 0u; output < DAWN_OUTPUT_COUNT; ++output) {
-        lengths[output] = DAWN_PIXELS_PER_OUTPUT + 99u;
+    for (uint32_t output = 0u; output < DONDER_OUTPUT_COUNT; ++output) {
+        lengths[output] = DONDER_PIXELS_PER_OUTPUT + 99u;
     }
-    EXPECT_EQ(frame_pipeline_configure(DAWN_OUTPUT_COUNT + 7u, lengths), 0u);
-    EXPECT_EQ(g_last_configure_active_count, DAWN_OUTPUT_COUNT + 7u);
-    EXPECT_EQ(g_last_configure_lengths[0], DAWN_PIXELS_PER_OUTPUT + 99u);
-    EXPECT_EQ(frame_pipeline_active_pixel_count(), DAWN_OUTPUT_COUNT * DAWN_PIXELS_PER_OUTPUT);
+    EXPECT_EQ(frame_pipeline_configure(DONDER_OUTPUT_COUNT + 7u, lengths), 0u);
+    EXPECT_EQ(g_last_configure_active_count, DONDER_OUTPUT_COUNT + 7u);
+    EXPECT_EQ(g_last_configure_lengths[0], DONDER_PIXELS_PER_OUTPUT + 99u);
+    EXPECT_EQ(frame_pipeline_active_pixel_count(), DONDER_OUTPUT_COUNT * DONDER_PIXELS_PER_OUTPUT);
     EXPECT_EQ(frame_pipeline_commit(), 0u);
-    EXPECT_EQ(g_last_frame_active_count, DAWN_OUTPUT_COUNT);
-    EXPECT_EQ(g_last_frame_lengths[0], DAWN_PIXELS_PER_OUTPUT);
-    EXPECT_EQ(g_last_frame_lengths[29], DAWN_PIXELS_PER_OUTPUT);
-    EXPECT_EQ(g_last_frame_required_words, DAWN_OUTPUT_COUNT * DAWN_PIXELS_PER_OUTPUT);
+    EXPECT_EQ(g_last_frame_active_count, DONDER_OUTPUT_COUNT);
+    EXPECT_EQ(g_last_frame_lengths[0], DONDER_PIXELS_PER_OUTPUT);
+    EXPECT_EQ(g_last_frame_lengths[29], DONDER_PIXELS_PER_OUTPUT);
+    EXPECT_EQ(g_last_frame_required_words, DONDER_OUTPUT_COUNT * DONDER_PIXELS_PER_OUTPUT);
     return 0;
 }
 

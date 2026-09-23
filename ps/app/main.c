@@ -19,7 +19,7 @@ int main(void)
 {
     uint32_t last_status_ms;
 
-    xil_printf("\r\ndawn controller starting\r\n");
+    xil_printf("\r\ndonder controller starting\r\n");
     xil_printf("max_outputs=%u pin_outputs=%u max_pixels_per_output=%u max_frame_words=%u default_active=%u default_pixels=%u output_invert_mask=0x%08x e131_port=%u first_universe=%u board_ip=%u.%u.%u.%u host_test_ip=%u.%u.%u.%u\r\n",
                (unsigned int)g_app_config.output_count,
                (unsigned int)g_app_config.pin_output_count,
@@ -50,7 +50,7 @@ int main(void)
     if (frame_pipeline_init() != 0) {
         fatal("frame_pipeline_config", -1);
     }
-    uint32_t expected_universes = ((frame_pipeline_active_pixel_count() * 3u) + DAWN_SLOTS_PER_UNIVERSE - 1u) / DAWN_SLOTS_PER_UNIVERSE;
+    uint32_t expected_universes = ((frame_pipeline_active_pixel_count() * 3u) + DONDER_SLOTS_PER_UNIVERSE - 1u) / DONDER_SLOTS_PER_UNIVERSE;
     xil_printf("strand_config active_outputs=%u first_lengths=[%u,%u,%u,%u] total_pixels=%u e131_channels=%u expected_universes=%u required_commit_words=%u\r\n",
                (unsigned int)frame_pipeline_active_output_count(),
                (unsigned int)frame_pipeline_strand_pixel_count(0u),

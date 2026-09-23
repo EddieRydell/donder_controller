@@ -26,7 +26,7 @@ def terminate_process_tree(process: subprocess.Popen[str] | None) -> None:
 
 
 def kill_stale_jtag_processes() -> None:
-    if os.environ.get("DAWN_CLEAN_JTAG", "1") == "0":
+    if os.environ.get("DONDER_CLEAN_JTAG", "1") == "0":
         return
 
     if os.name == "nt":

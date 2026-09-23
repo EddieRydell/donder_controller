@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-package dawn_pl_contract_pkg;
+package donder_pl_contract_pkg;
     localparam int OUTPUT_COUNT = 30;
     localparam int PIN_OUTPUT_COUNT = 30;
     localparam int PIXELS_PER_OUTPUT = 1024;

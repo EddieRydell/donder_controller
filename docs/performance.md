@@ -1,6 +1,6 @@
 # Performance Guide
 
-Dawn includes hardware-in-the-loop profiling so performance claims can be tied to repeatable runs and saved artifacts.
+Donder includes hardware-in-the-loop profiling so performance claims can be tied to repeatable runs and saved artifacts.
 
 The useful headline is not just raw packet rate. For WS281x, the output protocol has a hard frame-time limit:
 
@@ -8,7 +8,7 @@ The useful headline is not just raw packet rate. For WS281x, the output protocol
 max_fps = 1,000,000 / ((pixels_per_output * 30) + 50)
 ```
 
-That assumes 1250 ns per WS281x bit, 24 bits per RGB pixel, and a 50 us reset/latch interval. Because Dawn drives 30 outputs in parallel, protocol time depends on pixels per output, not total pixel count.
+That assumes 1250 ns per WS281x bit, 24 bits per RGB pixel, and a 50 us reset/latch interval. Because Donder drives 30 outputs in parallel, protocol time depends on pixels per output, not total pixel count.
 
 ## Profile Report
 
